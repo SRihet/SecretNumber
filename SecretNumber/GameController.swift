@@ -1,0 +1,66 @@
+//
+//  GameController.swift
+//  SecretNumber
+//
+//  Created by Stéphane Rihet on 28/04/2020.
+//  Copyright © 2020 SapinRocher. All rights reserved.
+//
+
+import Foundation
+
+class GameController {
+    
+    static let MIN_VALUE = 0
+    static let MAX_VALUE = 100
+    
+    private var _secretNumber: Int?
+    private var _lastGuessedValue:Int?
+    private var _lowBoundary:Int = GameController.MIN_VALUE
+    private var _highBoundary:Int = GameController.MAX_VALUE
+    
+    var lowBoundary: Int {
+        return _lowBoundary
+    }
+    
+    var highBoundary: Int {
+        return _highBoundary
+    }
+    
+    
+    var isGameInProgress: Bool {
+        guard let secretNumber = _secretNumber else { return false}
+        
+        return _lastGuessedValue == nil || _lastGuessedValue! != secretNumber
+        
+    }
+    
+    var secretNumber: Int? {
+        return _secretNumber
+    }
+    
+    func startNewGame(withSecretNumber secretNumber:Int?=nil) {
+        if secretNumber != nil {
+            _secretNumber = secretNumber
+        } else {
+            _secretNumber = Int(withRandomNUmberBetween: GameController.MIN_VALUE, and: GameController.MAX_VALUE)
+            print(_secretNumber)
+        }
+        _lastGuessedValue = nil
+        _lowBoundary = GameController.MIN_VALUE
+        _highBoundary = GameController.MAX_VALUE
+    }
+    
+    func verifyGuessedValue(_ value:Int) {
+        
+        guard let secretNumber = _secretNumber else {return}
+        _lastGuessedValue = value
+        if value != secretNumber {
+            if value < secretNumber {
+            _lowBoundary = max(_lowBoundary, value)
+        } else {
+            _highBoundary = min(_highBoundary, value)
+        }
+             }
+        
+    }
+}
